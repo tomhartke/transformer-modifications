@@ -16,7 +16,7 @@ What is measured:
 2. The relative distance from the query to the average key (weighted by attention). 
 3. The deviation of the relative distance of the query to the average key location (weighted by attention)
 
-This information is fed to an MLP which sees these 3 datapoints for a specific token and for all heads. 
+This information is fed to an MLP (a sub-component of the altered attention head) which sees these 3 datapoints for a specific token and for all heads. 
 This MLP decides how to scale the output value vector for each head for this token. 
 
 ### Updates to make to run it:
@@ -24,7 +24,7 @@ Just replace the CausalSelfAttention class.
 Also add in the MLP_loc class (keep the old MLP class as well). This just has slightly different format. 
 
 ### Outlook:
-This doesn't help, but also doesn't hurt. 
+This doesn't help the ultimate validation loss, but also doesn't hurt. 
 The head outputs end up getting scaled by on the order of 2 larger or smaller.
 Most likely because the transformer is already sufficiently expressive to gather this information.
 
