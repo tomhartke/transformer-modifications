@@ -10,6 +10,9 @@ The network size is usually 6 layers, 6 heads, with 64 dimensions per head, and 
 of 256 characters.
 It produces reasonable sounding text in the style of shakespeare after a few minutes of training. 
 
+File structure: "nanoGPT-basic" folder is just a local copy of the nanoGPT repository.
+"Modified-transformers" folder contains my modified code pieces. 
+
 ## Goals:
 1. Try to improve the transformer architecture by modifying the attention structure or network structure.
 2. Generally explore/understand transformers. Vary the network shape (heads, layers, embedding size), 
@@ -75,7 +78,7 @@ I am simply training on Shakespeare here).
 Get some GPU hardware. I have been using Jarvislabs (https://jarvislabs.ai/, an online server, with an A100 GPU).
 It's simple to start an instance, open VScode, and then clone the necessary repositories locally.
 
-### Explicit steps:
+### Explicit steps
 1. Clone nanoGPT repository (https://github.com/karpathy/nanoGPT.git)
    1. Check out documentation there if something in nanoGPT is unclear.
 2. Install a few things: 
@@ -91,3 +94,24 @@ It's simple to start an instance, open VScode, and then clone the necessary repo
    However, I did not find this improved anything significantly (the default settings are reasonable).
 7. Sample:
    1. python sample.py --out_dir=out-shakespeare-char --num_samples=1
+
+## Future work
+Try sparse attention with multiscale heads looking back further distance.
+Could be set up so that total key number for each query is the same for each head (even if some heads 
+look back much further). This could be used to compress the computational size of the context window, 
+while looking much further back in real distance.
+
+Could try to create something a bit more similar to how humans process ideas.
+We have a more sequential process of reasoning, looking at one spot at a time, 
+then going back and analyzing some other thing, then summarizing it in our head, 
+then coming back and doing something similar in another layer. 
+
+Papers to reference:
+Reformer, sparse transformer and strided attention ones.
+Different papers that already implemented distance-aware attention
+Routing transformer. 
+Non-parametric transformer ideas
+Memory based and saving information for local review.
+Reference my other knowledge graph thing. 
+
+Emphasize the idea that the structure of the attenion is not particularly accessible. 
