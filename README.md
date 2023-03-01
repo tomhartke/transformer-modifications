@@ -1,26 +1,30 @@
 # transformer-modifications
 
 ## Description
-These files are explorations of a toy model transformer implementation. 
-I used the nanoGPT transformer by Karpathy (https://github.com/karpathy/nanoGPT.git).
+These files are explorations of a toy model transformer implementation.
+I used the nanoGPT transformer by Karpathy (https://github.com/karpathy/nanoGPT.git). 
+This repo creates a small transformer in pyTorch which is trained on the combined total works of Shakespeare 
+(at a character prediction level, without a byte pair encoder), producing reasonable sounding text in the correct style after a few minutes of training. 
 
-This runs a small transformer on the combined total works of Shakespeare 
-(at a character prediction level, without a byte pair encoder). 
-The network size is usually 6 layers, 6 heads, with 64 dimensions per head, and a context size (block size) 
-of 256 characters.
-It produces reasonable sounding text in the style of shakespeare after a few minutes of training. 
+The purpose of these files is mostly as a personal record, and learning tool.
+
+
+
+
+## Goals and results:
+1. Try to improve the transformer architecture by modifying the attention structure or network structure (no luck, unsurprisingly).
+2. Generally explore/understand transformers. Vary the network shape (heads, layers, embedding size), 
+the dropout, and the context size (block size).
 
 #### File structure
 * "nanoGPT-basic" folder is just a local copy of the nanoGPT repository by Karpathy (https://github.com/karpathy/nanoGPT.git).
   * I did not write any of this! (I hope it is ok to just copy here for reference).
 * "Modified-transformers" folder contains my modified code pieces. 
 
-## Goals:
-1. Try to improve the transformer architecture by modifying the attention structure or network structure.
-2. Generally explore/understand transformers. Vary the network shape (heads, layers, embedding size), 
-the dropout, and the context size (block size).
-
 ## Transformer alterations:
+
+The base transformer implementation I altered has a network size of usually 6 layers, 6 heads, with 64 dimensions per head, and a context size (block size) 
+of 256 characters. There are usually around 10 million parameters, and few minutes of training on a GPU.
 
 The approaches I took can be split into two categories:
 ### 1. Query-dependent attention windows 
@@ -104,21 +108,31 @@ It's simple to start an instance, open VScode, and then clone the necessary repo
 1. Clone nanoGPT repository (https://github.com/karpathy/nanoGPT.git)
    1. Check out documentation there if something in nanoGPT is unclear.
 2. Install a few things: 
-   1. pip install datasets tiktoken wandb tqdm 
+   ```
+   pip install datasets tiktoken wandb tqdm 
+   ```
 3. Prepare dataset: 
-   1. python data/shakespeare_char/prepare.py
+   ```
+   python data/shakespeare_char/prepare.py
+   ```
 4. Alter model:
    1. Potentially alter transformer (see "modified-transformers" folder, and grab and copy chunks of code as necessary).
 4. Train: 
-   1. python train.py config/train_shakespeare_char.py --compile=False 
+   ```
+   python train.py config/train_shakespeare_char.py --compile=False 
+   ```
       1. compile=False is to prevent some pytorch bugs.
    2. The training setup can be altered further in the file config>train_shakespeare_char.py. 
    you can change the layer number, embedding size, head number, learning rates, etc.
    However, I did not find this improved anything significantly (the default settings are reasonable).
 7. Sample:
-   1. python sample.py --out_dir=out-shakespeare-char --num_samples=1
+   ```
+   python sample.py --out_dir=out-shakespeare-char --num_samples=1
+   ```
 
 ## Future work
+Many more people with better experience have attacked this problem for longer, so I'll probably stop here for now, until I know more.
+
 One idea is to try sparse attention with multiscale heads looking back further distance, but with the same
 total number of tokens attended to by each query. 
 That is, some heads look back every 16 tokens, some every 4, some every 2, etc. 
@@ -127,24 +141,24 @@ while looking much further back in real distance.
 
 ## References 
 
-Here are a set of references to look through and be aware of relating to transformer extensions:
-* https://arxiv.org/abs/1911.05507
-* https://arxiv.org/abs/1911.00172
-* https://arxiv.org/abs/2102.02557
-* https://arxiv.org/abs/2203.08913
-* https://arxiv.org/abs/2108.12409
-* https://aclanthology.org/2021.naacl-main.166/
-* https://arxiv.org/abs/1807.03819
-* https://arxiv.org/abs/1802.05751
-* https://arxiv.org/abs/1904.10509
-* https://arxiv.org/abs/1911.02972
-* https://arxiv.org/abs/2001.04451
-* https://arxiv.org/abs/2006.04768
-* https://arxiv.org/abs/1803.02155
-* https://arxiv.org/abs/1901.02860
-* https://arxiv.org/abs/2104.09864
-* https://arxiv.org/abs/2009.14794
-* https://arxiv.org/abs/2011.04006 
+Here are a set of references to look through and be aware of relating to transformer extensions (I haven't read all of them in detail, and this is certainly not exhaustive):
+* https://arxiv.org/abs/1911.05507 ("Compressive Transformers for Long-Range Sequence Modelling")
+* https://arxiv.org/abs/1911.00172 ("Generalization through Memorization: Nearest Neighbor Language Models")
+* https://arxiv.org/abs/2102.02557 ("Adaptive Semiparametric Language Models")
+* https://arxiv.org/abs/2203.08913 ("Memorizing Transformers")
+* https://arxiv.org/abs/2108.12409 ("Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation")
+* https://aclanthology.org/2021.naacl-main.166/ ("DA-Transformer: Distance-aware Transformer")
+* https://arxiv.org/abs/1807.03819 ("Universal Transformers")
+* https://arxiv.org/abs/1802.05751 ("Image Transformer")
+* https://arxiv.org/abs/1904.10509 ("Generating Long Sequences with Sparse Transformers")
+* https://arxiv.org/abs/1911.02972 ("Blockwise Self-Attention for Long Document Understanding")
+* https://arxiv.org/abs/2001.04451 ("Reformer: The Efficient Transformer")
+* https://arxiv.org/abs/2006.04768 ("Linformer: Self-Attention with Linear Complexity")
+* https://arxiv.org/abs/1803.02155 ("Self-Attention with Relative Position Representations")
+* https://arxiv.org/abs/1901.02860 ("Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context")
+* https://arxiv.org/abs/2104.09864 ("RoFormer: Enhanced Transformer with Rotary Position Embedding")
+* https://arxiv.org/abs/2009.14794 ("Rethinking Attention with Performers")
+* https://arxiv.org/abs/2011.04006 ("Long Range Arena: A Benchmark for Efficient Transformers")
 
 Good blog posts:
 * https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/
