@@ -1,2 +1,4 @@
 venv
 TransformerAlterations.key
+.DS_Store
+.idea/
